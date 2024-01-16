@@ -1,0 +1,40 @@
+name: ManagedAgentsDemo
+
+on:
+  push:
+    branches:
+        - main
+  pull_request:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    if: ${{ github.event_name != 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout [main]
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '20'
+      - run: npm ci --force
+      - name: Run verification
+        run: 'npx nx run-many -t build test lint && npx nx run-many -t e2e-ci --parallel=1'
+
+  pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout [main]
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '20'
+      - run: npm ci --force
+      - name: Run verification
+        run: 'npx nx run-many -t build test lint && npx nx run-many -t e2e-ci --parallel=1'
