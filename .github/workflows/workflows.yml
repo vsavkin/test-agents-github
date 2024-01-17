@@ -21,7 +21,7 @@ jobs:
           node-version: '20'
       - run: npm ci --force
       - name: Run verification
-        run: 'npx nx run-many -t build test lint && npx nx run-many -t e2e-ci --parallel=1'
+        run: 'npx nx run-many -t build test lint && npx nx run-many -t e2e-ci -'
 
   pr:
     runs-on: ubuntu-latest
@@ -37,4 +37,4 @@ jobs:
           node-version: '20'
       - run: npm ci --force
       - name: Run verification
-        run: 'npx nx run-many -t build test lint && npx nx run-many -t e2e-ci --parallel=1'
+        run: 'npx nx run-many -t build test lint e2e-ci'
